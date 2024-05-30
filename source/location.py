@@ -1,5 +1,6 @@
 import requests
 from country_codes import country_codes_list
+import configuration
 
 class location:
             
@@ -12,6 +13,8 @@ class location:
         TYPE == float      DESCRIPTION : lon
     
         '''
+        s = configuration.settings()
+        
         location_setting = eval(open('setting.json', 'r').read())
         
         country = location_setting['Country']

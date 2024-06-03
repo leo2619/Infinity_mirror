@@ -1,18 +1,27 @@
 import requests
-from location import location
+from location import Location
 
-class weather:
+
+class Weather:
     
-    def __init__(self):
     
-        cordinates = location.get_coordinates()
+    def get_request():
         
-        lat, lon = cordinates
-        self.lat = str(lat)
-        self.lon = str(lon)
+        L = Location
+        coordinates = L.get_coordinates()
         
-    def get_wind(self):
-        r_weather = requests.get('https://api.brightsky.dev/current_weather?lat=' + self.lat + '&lon=' + self.lon + '&units=dwd')
+     
+        lat, lon = coordinates
+        lat = str(lat)
+        lon = str(lon)
+        
+        r = requests.get('https://api.brightsky.dev/current_weather?lat=' + lat + '&lon=' + lon + '&units=dwd')
+        return r
+        
+    def get_wind():
+              
+        
+        r_weather = Weather.get_request()
     
     
         wind_speed = r_weather.json()['weather']['wind_speed_30']
@@ -40,29 +49,30 @@ class weather:
             
         return str(wind_direction) + '-Wind', str(wind_speed) + 'km/h'
     
-    def get_temperature(self):
+    def get_temperature():
         
-        r_weather = requests.get('https://api.brightsky.dev/current_weather?lat=' + self.lat + '&lon=' + self.lon + '&units=dwd')
+        r_weather = Weather.get_request()
         temperature = r_weather.json()['weather']['temperature']
-        
+    
         return str(temperature) + '°C'
     
-    def get_icon(self):
+    def get_icon():
         
-        r_weather = requests.get('https://api.brightsky.dev/current_weather?lat=' + self.lat + '&lon=' + self.lon + '&units=dwd')
+        r_weather = Weather.get_request()
         icon =  r_weather.json()['weather']['icon']
     
         #icon path 
         if icon == 'sleet' or icon == 'snow':
-            icon_path = 'weather_icons\snow.png'
+            icon_path = 'weather_icons/snow.png'
         else:
-            icon_path = f'weather_icons\{icon}.png'
+            icon_path = f'weather_icons/{icon}.png'
        
         return icon_path
 
-    def get_status(self):
-        r_weather = requests.get('https://api.brightsky.dev/current_weather?lat=' + self.lat + '&lon=' + self.lon + '&units=dwd')
+    def get_status():
+        r_weather = Weather.get_request()
         status =  r_weather.json()['weather']['icon']
         
         return status
-        
+
+

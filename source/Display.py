@@ -1,10 +1,13 @@
 import time
-from weather import weather
+from weather import Weather
 import pygame
 from pygame.locals import *
+from location import Location
+from configuration import Settings
 pygame.init()
-w = weather()
-
+W = Weather
+L = Location()
+    
 
 
 # Variablen/KONSTANTEN setzen
@@ -16,21 +19,24 @@ spielaktiv = True
 skalierung      = 0 
 skalierungswert = 0.02
 
-icon_path = pygame.image.load("weather_icons\cloudy.png")
+icon_path = pygame.image.load(W.get_icon())
 bildgroessen = icon_path.get_rect()
 
 #status text
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
-status_text_surface = my_font.render(w.get_status(), False, (0, 0, 0))
+status_text_surface = my_font.render(W.get_status(), False, (0, 0, 0))
 
 #wind text
-wind_direction, wind_speed = w.get_wind()
+wind_direction, wind_speed = W.get_wind()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
 wind_direction_text_surface = my_font.render(wind_direction, False, (0, 0, 0))
 wind_speed_text_surface = my_font.render(wind_speed, False, (0, 0, 0))
 
 #temperature
-temp_speed_text_surface = my_font.render(w.get_temperature(), False, (0, 0, 0))
+temp_text_surface = my_font.render(W.get_temperature(), False, (0, 0, 0))
+
+#City
+city_text_surface = my_font.render(L.get_city(), False, (0, 0, 0))
 
 # Definieren und Öffnen eines neuen Fensters
 fenster =pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -40,7 +46,7 @@ clock = pygame.time.Clock()
 # Schleife Hauptprogramm
 while spielaktiv:
     start = time.time()
-    end = start + 600
+    end = start + 10
     while end > start:
         start = time.time()
     # Überprüfen, ob Nutzer eine Aktion durchgeführt hat
@@ -70,17 +76,26 @@ while spielaktiv:
         #wind_speed
         fenster.blit(wind_speed_text_surface, (100, 150))
         #temperature
-        fenster.blit(temp_speed_text_surface, (100, 300))
-        
+        fenster.blit(temp_text_surface, (100, 300))
+        #city
+        fenster.blit(city_text_surface, (150, 400))
         
         # Fenster aktualisieren
         pygame.display.flip()
         clock.tick(FPS)
     
     #Wetter daten aktualisieren
-    icon_path = pygame.image.load(w.get_icon())
-    status_text_surface = my_font.render(w.get_status(), False, (0, 0, 0))
-    wind_direction, wind_speed = w.get_wind()
-    temp = w.get_temperature()
+    print('aktualisieren')
     
+    icon_path = pygame.image.load(W.get_icon())
+   
+    status_text_surface = my_font.render(W.get_status(), False, (0, 0, 0))
+    
+    wind_direction, wind_speed = W.get_wind()
+    wind_direction_text_surface = my_font.render(wind_direction, False, (0, 0, 0))
+    wind_speed_text_surface = my_font.render(wind_speed, False, (0, 0, 0))
+    
+    temp_text_surface = my_font.render(W.get_temperature(), False, (0, 0, 0))
+   
+    city_text_surface = my_font.render(L.get_city(), False, (0, 0, 0))
     

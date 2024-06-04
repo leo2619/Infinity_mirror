@@ -15,7 +15,8 @@ class Weather:
         lat = str(lat)
         lon = str(lon)
         
-        r = requests.get('https://api.brightsky.dev/current_weather?lat=' + lat + '&lon=' + lon + '&units=dwd')
+        r = requests.get('https://api.brightsky.dev/current_weather?lat='
+                         + lat + '&lon=' + lon + '&units=dwd')
         return r
         
     def get_wind():

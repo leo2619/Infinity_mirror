@@ -37,10 +37,11 @@ class Settings:
         setting.write(json.dumps(data))
         setting.close
     
-class Location:
+class Location(Settings):
     
     def __init__(self):
-        Settings()
+        super().__init__()
+    
         
     def get_request(self):
         

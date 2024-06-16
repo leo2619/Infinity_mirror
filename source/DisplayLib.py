@@ -53,54 +53,37 @@ class Location(Settings):
         for i in country_codes_list:
             if i['name'] == self.country:
                 self.country_code = i['code']
-                        
+                   
+        self.r_location = requests.get('http://api.openweathermap.org/geo/1.0/direct?q='
+                                  + self.city + ','+ self.state + ',' + self.country_code + 
+                                  '&limit=5&appid=2fb76b8383ba35703d287350c62e568b')
             
 
     def get_coordinates(self):
-        '''
-        Returns
-        -------
-        TYPE == float      DESCRIPTION : lat
-        TYPE == float      DESCRIPTION : lon
-            
-        '''
-        self.get_request()
         
-        r_location = requests.get('http://api.openweathermap.org/geo/1.0/direct?q='
-                                  + self.city + ','+ self.state + ',' + self.country_code + '&limit=5&appid=2fb76b8383ba35703d287350c62e568b')
-        lat = r_location.json()[0]['lat']
-        lon = r_location.json()[0]['lon']
+        self.get_request()   
+        lat = self.r_location.json()[0]['lat']
+        lon = self.r_location.json()[0]['lon']
         
         return lat, lon
 
     def get_city(self):
         
-        '''        
-        Returns
-        -------
-        TYPE == String      DESCRIPTION : Cityname
-
-        '''
-        
         self.get_request()
-        
-        r_location = requests.get('http://api.openweathermap.org/geo/1.0/direct?q='
-                                  + self.city + ','+ self.state + ',' + self.country_code + '&limit=5&appid=2fb76b8383ba35703d287350c62e568b')
-        
-        
-        return r_location.json()[0]['name']
+        return self.r_location.json()[0]['name']
 
 class Weather:
     
     def __init__(self):
-         
-        self.get_request()
-    
+        
+        try:
+            self.get_request()
+        except:
+            raise SystemError('No connection')
     
     def get_request(self):
         
-        L = Location()
-        coordinates = L.get_coordinates()
+        coordinates = Location().get_coordinates()
         
      
         lat, lon = coordinates

@@ -41,10 +41,8 @@ logo_text_surface = my_start.render('Infinity Spiegel', False, (0, 0, 0))
 # Initial background color (black)
 color = [0, 0, 0]
 # Set the increment value for brightness increase
-increment = 1
+increment = 8
 max_brightness = 255
-# Control the speed of brightness increase
-delay = 0.001
 
 # Definieren und Öffnen eines neuen Fensters
 fenster = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -75,7 +73,7 @@ while spielaktiv:
             
         if start + 4.5 > time.time():
             
-            FPS = 60
+            FPS = 400
             fenster.blit(logo_text_surface, (150, 400))
         
         if start + 4.5 < time.time():

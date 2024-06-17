@@ -1,5 +1,5 @@
-# LED-Streifen
 import time
+import RPi.GPIO as GPIO
 from rpi_ws281x import PixelStrip, Color
 import argparse
 import LED_color
@@ -50,8 +50,7 @@ class LEDStrip:
         """Draw rainbow that uniformly distributes itself across all pixels."""
         for j in range(256 * iterations):
             for i in range(self.strip.numPixels()):
-                self.strip.setPixelColor(i, self.wheel(
-                    (int(i * 256 / self.strip.numPixels()) + j) & 255))
+                self.strip.setPixelColor(i, self.wheel((int(i * 256 / self.strip.numPixels()) + j) & 255))
             self.strip.show()
             time.sleep(wait_ms / 1000.0)
 
@@ -65,6 +64,11 @@ class LEDStrip:
                 time.sleep(wait_ms / 1000.0)
                 for i in range(0, self.strip.numPixels(), 3):
                     self.strip.setPixelColor(i + q, 0)
+
+def button_callback(channel):
+    global animation_index
+    animation_index = (animation_index + 1) % len(animations)
+    print(f'Switching to animation {animation_index}')
 
 if __name__ == '__main__':
     # Process arguments
@@ -81,8 +85,30 @@ if __name__ == '__main__':
     LED_INVERT = False     # True to invert the signal (when using NPN transistor level shift)
     LED_CHANNEL = 0        # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
+    # Button configuration
+    BUTTON_PIN = 17        # GPIO pin connected to the button
+
+    # Setup GPIO for button
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button_callback, bouncetime=300)
+
     # Create LEDStrip object with appropriate configuration.
     led_strip = LEDStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_BRIGHTNESS, LED_INVERT, LED_CHANNEL)
+
+    animations = [
+        lambda: led_strip.color_wipe(LED_color.red),
+        lambda: led_strip.color_wipe(LED_color.green),
+        lambda: led_strip.color_wipe(LED_color.blue),
+        lambda: led_strip.theater_chase(Color(127, 127, 127)),
+        lambda: led_strip.theater_chase(Color(127, 0, 0)),
+        lambda: led_strip.theater_chase(Color(0, 0, 127)),
+        lambda: led_strip.rainbow(),
+        lambda: led_strip.rainbow_cycle(),
+        lambda: led_strip.theater_chase_rainbow()
+    ]
+
+    animation_index = 0
 
     print('Press Ctrl-C to quit.')
     if not args.clear:
@@ -90,19 +116,10 @@ if __name__ == '__main__':
 
     try:
         while True:
-            print('Color wipe animations.')
-            led_strip.color_wipe(LED_color.red)  # Red wipe
-            led_strip.color_wipe(LED_color.green)  # Green wipe
-            led_strip.color_wipe(LED_color.blue)  # Blue wipe
-            print('Theater chase animations.')
-            led_strip.theater_chase(Color(127, 127, 127))  # White theater chase
-            led_strip.theater_chase(Color(127, 0, 0))  # Red theater chase
-            led_strip.theater_chase(Color(0, 0, 127))  # Blue theater chase
-            print('Rainbow animations.')
-            led_strip.rainbow()
-            led_strip.rainbow_cycle()
-            led_strip.theater_chase_rainbow()
+            animations[animation_index]()
+            time.sleep(1)  # Wait a bit before starting the next animation
 
     except KeyboardInterrupt:
         if args.clear:
             led_strip.color_wipe(Color(0, 0, 0), 10)
+        GPIO.cleanup()

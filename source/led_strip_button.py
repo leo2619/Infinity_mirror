@@ -1,8 +1,15 @@
-import time
+##led_strip_button.py
+#to control the led strip via push button
+
+#imports necessary for the button
 import RPi.GPIO as GPIO
+from button import *
+
+#imports necessary for the led strip
 from rpi_ws281x import PixelStrip, Color
 import argparse
-import LED_color
+from LED_color import *
+import time
 
 class LEDStrip:
     def __init__(self, led_count, led_pin, led_freq_hz, led_dma, led_brightness, led_invert, led_channel):
@@ -65,10 +72,6 @@ class LEDStrip:
                 for i in range(0, self.strip.numPixels(), 3):
                     self.strip.setPixelColor(i + q, 0)
 
-def button_callback(channel):
-    global animation_index
-    animation_index = (animation_index + 1) % len(animations)
-    print(f'Switching to animation {animation_index}')
 
 if __name__ == '__main__':
     # Process arguments
@@ -79,10 +82,10 @@ if __name__ == '__main__':
     # LED strip configuration:
     LED_COUNT = 120        # Number of LED pixels.
     LED_PIN = 18           # GPIO pin connected to the pixels (18 uses PWM!).
-    LED_FREQ_HZ = 800000   # LED signal frequency in hertz (usually 800khz)
-    LED_DMA = 10           # DMA channel to use for generating signal (try 10)
+    LED_FREQ_HZ = 800000   # LED signal frequency in hertz (800khz)
+    LED_DMA = 10           # DMA channel to use for generating signal (10)
     LED_BRIGHTNESS = 255   # Set to 0 for darkest and 255 for brightest
-    LED_INVERT = False     # True to invert the signal (when using NPN transistor level shift)
+    LED_INVERT = False     # True to invert the signal
     LED_CHANNEL = 0        # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
     # Button configuration
@@ -91,7 +94,7 @@ if __name__ == '__main__':
     # Setup GPIO for button
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button_callback, bouncetime=300)
+    GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button.button_callback, bouncetime=300)
 
     # Create LEDStrip object with appropriate configuration.
     led_strip = LEDStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_BRIGHTNESS, LED_INVERT, LED_CHANNEL)

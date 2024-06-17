@@ -1,4 +1,5 @@
-##color.py
+##LED_color.py
+#defines colors used in main() while calling animations
 
 class LED_color():
     def red(self):

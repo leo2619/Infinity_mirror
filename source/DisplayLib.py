@@ -4,13 +4,16 @@ from country_codes import country_codes_list
 
 class Settings:
     
-    def __init__(self):
+    def __init__(self, username):
                 
+        self.user = username
+        self.setting_file = 'setting_' + self.user + '.json'
+        
         try:
-            open('setting.json', 'x')
+            open(self.setting_file, 'x')
         except:
             try:
-                with open('setting.json') as json_file:
+                with open(self.setting_file) as json_file:
                     data = json.load(json_file)
                 len(data) == 3
             except:
@@ -24,38 +27,38 @@ class Settings:
     
     def set_location_setting(self):
         
-        self.country = input('Country: ')
-        self.city = input('City: ')
-        self.state = input('State: ')
+        country = input('Country: ')
+        city = input('City: ')
+        state = input('State: ')
         
         data = {
-            'Country': self.country,
-            'City': self.city,
-            'State': self.state
+            'Country': country,
+            'City': city,
+            'State': state
         }
-        setting = open('setting.json', 'w')
+        setting = open(self.setting_file, 'w')
         setting.write(json.dumps(data))
         setting.close
     
 class Location(Settings):
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, username):
+        super().__init__(username)
     
         
     def get_request(self):
         
-        self.location_setting = eval(open('setting.json', 'r').read())
-        self.country = self.location_setting['Country']
-        self.city = self.location_setting['City']
-        self.state = self.location_setting['State']
+        location_setting = eval(open(self.setting_file, 'r').read())
+        country = location_setting['Country']
+        city = location_setting['City']
+        state = location_setting['State']
         
         for i in country_codes_list:
-            if i['name'] == self.country:
-                self.country_code = i['code']
+            if i['name'] == country:
+                country_code = i['code']
                    
         self.r_location = requests.get('http://api.openweathermap.org/geo/1.0/direct?q='
-                                  + self.city + ','+ self.state + ',' + self.country_code + 
+                                  + city + ','+ state + ',' + country_code + 
                                   '&limit=5&appid=2fb76b8383ba35703d287350c62e568b')
             
 
@@ -74,7 +77,9 @@ class Location(Settings):
 
 class Weather:
     
-    def __init__(self):
+    def __init__(self, Location):
+        
+        self.Location = Location
         
         try:
             self.get_request()
@@ -83,9 +88,9 @@ class Weather:
     
     def get_request(self):
         
-        coordinates = Location().get_coordinates()
+        coordinates = self.Location.get_coordinates()
         
-     
+    
         lat, lon = coordinates
         lat = str(lat)
         lon = str(lon)

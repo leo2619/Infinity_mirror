@@ -3,10 +3,11 @@ import pygame
 from pygame.locals import *
 import DisplayLib
 
+user = input('username: ')
 pygame.init()
-W = DisplayLib.Weather()
-L = DisplayLib.Location()    
 
+L = DisplayLib.Location(user)    
+W = DisplayLib.Weather(L)
 # Variablen/KONSTANTEN setzen
 
 WEISS = (255, 255, 255)

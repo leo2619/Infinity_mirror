@@ -57,7 +57,7 @@ class LEDStrip(PixelStrip):
     def rainbow_cycle(self, wait_ms=20, iterations=5):
         """Draw rainbow that uniformly distributes itself across all pixels."""
         for j in range(256 * iterations):
-            for i in range(self.strip.numPixels()):
+            for i in range(self.numPixels()):
                 self.setPixelColor(i, self.wheel((int(i * 256 / self.numPixels()) + j) & 255))
             self.show()
             time.sleep(wait_ms / 1000.0)

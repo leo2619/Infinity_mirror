@@ -96,7 +96,7 @@ if __name__ == '__main__':
     GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button.button_callback, bouncetime=300)
 
-    # Create LEDStrip object with appropriate configuration.
+    # Create LEDStrip object
     led_strip = LEDStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_BRIGHTNESS, LED_INVERT, LED_CHANNEL)
 
     animations = [

@@ -184,10 +184,10 @@ class PixelStrip:
         return self[n]
 
     def getPixelColorRGB(self, n):
-        return RGBW(self[n])
+        return Color.RGBW(self[n])
 
     def getPixelColorRGBW(self, n):
-        return RGBW(self[n])
+        return Color.RGBW(self[n])
 
 # Shim for back-compatibility
 class Adafruit_NeoPixel(PixelStrip):

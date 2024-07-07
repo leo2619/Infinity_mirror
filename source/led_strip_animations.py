@@ -1,4 +1,4 @@
-##led_strip_button.py
+##led_strip_animations.py
 #to control the led strip via push button
 
 #imports necessary for the button

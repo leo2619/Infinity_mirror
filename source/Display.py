@@ -84,19 +84,19 @@ while spielaktiv:
             
             # Spielfeld/figuren zeichnen
             icon_groesse = pygame.transform.scale(icon_path, (350 + int(skalierung), 350 + int(skalierung)))
-            fenster.blit(icon_groesse, (150, 100))
+            fenster.blit(icon_groesse, (300, 30))
             
             # Text zeichnen
             # status
-            fenster.blit(status_text_surface, (30, 20))
+            fenster.blit(status_text_surface, (250, 400))
             # wind_direction
-            fenster.blit(wind_direction_text_surface, (100, 100))
+            fenster.blit(wind_direction_text_surface, (100, 150))
             # wind_speed
-            fenster.blit(wind_speed_text_surface, (100, 150))
+            fenster.blit(wind_speed_text_surface, (100, 200))
             # temperature
-            fenster.blit(temp_text_surface, (100, 300))
+            fenster.blit(temp_text_surface, (100, 250))
             # city
-            fenster.blit(city_text_surface, (150, 400))
+            fenster.blit(city_text_surface, (250, 20))
         
         # Fenster aktualisieren
         pygame.display.flip()
